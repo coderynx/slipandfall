@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "FallingAI.Terminal": {
+      "commandName": "Project",
+      "commandLineArgs": "Test"
+    }
+  }
+}
