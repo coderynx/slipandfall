@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Drawing;
 using System.IO;
 using System.Linq;
 using Microsoft.ML;
@@ -7,32 +6,32 @@ using Microsoft.ML;
 namespace FallingAI.Core
 {
     /// <summary>
-    /// Image Classifier with Artificial Intelligence.
+    ///     Image Classifier with Artificial Intelligence.
     /// </summary>
     public class ImageClassifier
     {
         /// <summary>
-        /// Machine Learning Context used.
-        /// </summary>
-        private readonly MLContext _mlContext = new MLContext(1);
-
-        /// <summary>
-        /// Inception TensorFlow model path.
-        /// </summary>
-        private readonly string _inceptionTensorFlowModelPath;
-
-        /// <summary>
-        /// Custom model path.
+        ///     Custom model path.
         /// </summary>
         private readonly string _customModelPath;
 
         /// <summary>
-        /// Prediction engine.
+        ///     Inception TensorFlow model path.
+        /// </summary>
+        private readonly string _inceptionTensorFlowModelPath;
+
+        /// <summary>
+        ///     Machine Learning Context used.
+        /// </summary>
+        private readonly MLContext _mlContext = new MLContext(1);
+
+        /// <summary>
+        ///     Prediction engine.
         /// </summary>
         private PredictionEngine<ModelInput, ModelOutput> _predictionEngine;
 
         /// <summary>
-        /// Image classifier constructor.
+        ///     Image classifier constructor.
         /// </summary>
         /// <param name="modelsDirectory">Models directory</param>
         public ImageClassifier(string modelsDirectory)
@@ -42,7 +41,7 @@ namespace FallingAI.Core
         }
 
         /// <summary>
-        /// Load the model from the working directory.
+        ///     Load the model from the working directory.
         /// </summary>
         public void LoadModel()
         {
@@ -53,7 +52,7 @@ namespace FallingAI.Core
         }
 
         /// <summary>
-        /// Test a sample.
+        ///     Test a sample.
         /// </summary>
         /// <param name="bitmap">Bitmap to test.</param>
         /// <returns>Result.</returns>
@@ -64,7 +63,7 @@ namespace FallingAI.Core
         }
 
         /// <summary>
-        /// Execute training.
+        ///     Execute training.
         /// </summary>
         /// <param name="datasetPath">Training dataset path.</param>
         public void Train(string datasetPath)
@@ -80,7 +79,7 @@ namespace FallingAI.Core
         }
 
         /// <summary>
-        /// Load images (jpg) dataset from file system.
+        ///     Load images (jpg) dataset from file system.
         /// </summary>
         /// <param name="datasetPath">Dataset path.</param>
         /// <returns>DataView dataset.</returns>
@@ -91,7 +90,6 @@ namespace FallingAI.Core
                 from file in new DirectoryInfo(directory).GetFiles("*.jpg")
                 let directoryInfo = file.Directory
                 where directoryInfo != null
-                where directoryInfo != null
                 select new ModelInput(directoryInfo.Name, new Bitmap(file.FullName))).ToList();
 
             // Return dataset DataView.
@@ -99,14 +97,14 @@ namespace FallingAI.Core
         }
 
         /// <summary>
-        /// Method to train the model.
+        ///     Method to train the model.
         /// </summary>
         /// <param name="trainingData">Data to use for training.</param>
         /// <returns>Generated model.</returns>
         private ITransformer GenerateModel(IDataView trainingData)
         {
             // Defining the pipeline.
-            var pipeline = _mlContext.Transforms.ResizeImages(outputColumnName: "Image_Resized",
+            var pipeline = _mlContext.Transforms.ResizeImages("Image_Resized",
                     InceptionModelSettings.ImageWidth, InceptionModelSettings.ImageHeight, "Image")
 
                 // Convert the image to GrayScale.
@@ -119,9 +117,9 @@ namespace FallingAI.Core
 
                 // Load the Inception TensorFlow Model.
                 .Append(_mlContext.Model.LoadTensorFlowModel(_inceptionTensorFlowModelPath)
-                    .ScoreTensorFlowModel(new[] {"softmax2_pre_activation"}, new[] {"input"}, true))
-                .Append(_mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: "LabelKey", "Label"))
-                .Append(_mlContext.MulticlassClassification.Trainers.LbfgsMaximumEntropy(labelColumnName: "LabelKey",
+                    .ScoreTensorFlowModel(new[] { "softmax2_pre_activation" }, new[] { "input" }, true))
+                .Append(_mlContext.Transforms.Conversion.MapValueToKey("LabelKey", "Label"))
+                .Append(_mlContext.MulticlassClassification.Trainers.LbfgsMaximumEntropy("LabelKey",
                     "softmax2_pre_activation"))
                 .Append(_mlContext.Transforms.Conversion.MapKeyToValue("PredictedLabelValue", "PredictedLabel"))
                 .AppendCacheCheckpoint(_mlContext);
@@ -131,7 +129,7 @@ namespace FallingAI.Core
         }
 
         /// <summary>
-        /// Image inception model settings.
+        ///     Image inception model settings.
         /// </summary>
         private struct InceptionModelSettings
         {

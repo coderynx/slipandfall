@@ -1,6 +1,5 @@
 ﻿using System;
 using FallingAI.Core;
-using Microsoft.ML;
 using OpenCvSharp;
 using OpenCvSharp.Extensions;
 
@@ -31,7 +30,7 @@ namespace FallingAI.Terminal
             _imageClassifier.LoadModel();
 
             // Start new video capture device.
-            var capture = new VideoCapture(0) {Fps = 5};
+            var capture = new VideoCapture(0) { Fps = 5 };
 
             // Create a window for displaying camera stream.
             using (var window = new Window("Camera"))
@@ -39,17 +38,16 @@ namespace FallingAI.Terminal
                 using var image = new Mat();
                 while (true)
                 {
-                    
                     // Capture image from the stream.
                     capture.Read(image);
-                    
+
                     // Exit from cycle if there is no frame captured.
                     if (image.Empty()) break;
-                    
+
                     // Show video frame on window.
                     window.ShowImage(image);
                     Console.Write("[Falling Detection AI] Detected: ");
-                    
+
                     // Detect video frame.
                     var detectionResult = _imageClassifier.Test(image.ToBitmap());
 
@@ -82,6 +80,5 @@ namespace FallingAI.Terminal
 
             Console.ReadKey();
         }
-
     }
 }

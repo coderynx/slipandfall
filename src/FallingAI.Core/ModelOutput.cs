@@ -1,20 +1,17 @@
-﻿using System.Drawing;
-using Microsoft.ML.Transforms.Image;
-
-namespace FallingAI.Core
+﻿namespace FallingAI.Core
 {
     /// <summary>
-    /// Model output.
+    ///     Model output.
     /// </summary>
     public class ModelOutput
     {
         /// <summary>
-        /// Prediction score.
+        ///     Prediction score.
         /// </summary>
         public float[] Score;
 
         /// <summary>
-        /// Prediction result.
+        ///     Prediction result.
         /// </summary>
         public string PredictedLabelValue { get; set; }
     }

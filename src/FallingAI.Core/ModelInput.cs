@@ -4,13 +4,12 @@ using Microsoft.ML.Transforms.Image;
 namespace FallingAI.Core
 {
     /// <summary>
-    /// ML Model input sample.
+    ///     ML Model input sample.
     /// </summary>
     public class ModelInput
     {
-        public string Label;
-
         [ImageType(800, 600)] public Bitmap Image;
+        public string Label;
 
         public ModelInput(string label, Bitmap image)
         {
